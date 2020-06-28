@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/axmty/go-playground/morestrings"
 )
 
 func main() {
-	fmt.Println("Hello, world.")
+	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 }
