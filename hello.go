@@ -10,6 +10,12 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+// Vertex is a simple vector struct
+type Vertex struct {
+	X int
+	Y int
+}
+
 // Sqrt computes the square root of x with a precision of epsilon
 func Sqrt(x, epsilon float64) float64 {
 	z := 1.0
@@ -52,6 +58,30 @@ func deferPrints(arr []string) {
 		// (Last In First Out)
 		defer fmt.Println(s)
 	}
+}
+
+func playPointers() {
+	i := 1
+	p := &i
+	i = 2
+	fmt.Println(i, p, *p)
+}
+
+func playStructs() {
+	v := Vertex{1, 2}
+	v.X = 4
+	p := &v
+	fmt.Println(v.X)
+	v.X = 5
+	fmt.Println((*p).X)
+	fmt.Println(p.X) // No need to write explicit dereference (*p).X
+
+	v1 := Vertex{1, 2}  // X = 1, Y = 2
+	v2 := Vertex{X: 1}  // Y = 0
+	v3 := Vertex{}      // X = 0, Y = 0
+	p1 := &Vertex{1, 2} // type *Vertex
+
+	fmt.Println(v1, v2, v3, p1)
 }
 
 func main() {
@@ -113,4 +143,7 @@ func main() {
 
 	deferPrint("Hello!!!")
 	deferPrints([]string{"s1", "s2", "s3"})
+
+	playPointers()
+	playStructs()
 }
