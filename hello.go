@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"math"
+	"runtime"
+	"time"
 
 	"github.com/axmty/go-playground/morestrings"
 	"github.com/google/go-cmp/cmp"
@@ -38,6 +40,20 @@ func sqrt(x float64) string {
 	return fmt.Sprint(math.Sqrt(x))
 }
 
+func deferPrint(s string) {
+	defer fmt.Println(s)
+	fmt.Println("Deferred string:")
+}
+
+func deferPrints(arr []string) {
+	fmt.Println("Deferred strings:")
+	for _, s := range arr {
+		// Each defer statement push the target statement onto a stack
+		// (Last In First Out)
+		defer fmt.Println(s)
+	}
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -60,5 +76,41 @@ func main() {
 	// for {
 	// }
 
-	fmt.Println(Sqrt(3, 0.00001))
+	fmt.Println(Sqrt(3, 0.001))
+
+	// Simple switch conditions
+	switch os := runtime.GOOS; os {
+	case "darwin":
+		fmt.Println("OS X.")
+	case "linux":
+		fmt.Println("Linux.")
+	default:
+		fmt.Printf("%s.\n", os)
+	}
+
+	// More complex switch conditions
+	switch today := time.Now().Weekday(); time.Saturday {
+	case today + 0:
+		fmt.Println("Today.")
+	case today + 1:
+		fmt.Println("Tomorrow.")
+	case today + 2:
+		fmt.Println("In two days.")
+	default:
+		fmt.Println("Too far away.")
+	}
+
+	// Switch with no condition
+	t := time.Now()
+	switch {
+	case t.Hour() < 12:
+		fmt.Println("Good morning!")
+	case t.Hour() < 17:
+		fmt.Println("Good afternoon.")
+	default:
+		fmt.Println("Good evening.")
+	}
+
+	deferPrint("Hello!!!")
+	deferPrints([]string{"s1", "s2", "s3"})
 }
