@@ -8,10 +8,22 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+// Sqrt computes the square root of x with a precision of epsilon
+func Sqrt(x, epsilon float64) float64 {
+	z := 1.0
+	for math.Abs(z*z-x) > epsilon {
+		z -= (z*z - x) / (2 * z)
+		fmt.Println(z, z*z)
+	}
+	return z
+}
+
 func powIf(x, n, lim float64) float64 {
-	if v := math.Pow(x, n); v < lim {
+	v := math.Pow(x, n)
+	if v < lim {
 		return v
 	}
+	fmt.Printf("%g >= %g\n", v, lim)
 	return lim
 }
 
@@ -47,4 +59,6 @@ func main() {
 	// Infinite loop
 	// for {
 	// }
+
+	fmt.Println(Sqrt(3, 0.00001))
 }
