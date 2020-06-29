@@ -79,9 +79,27 @@ func playStructs() {
 	v1 := Vertex{1, 2}  // X = 1, Y = 2
 	v2 := Vertex{X: 1}  // Y = 0
 	v3 := Vertex{}      // X = 0, Y = 0
-	p1 := &Vertex{1, 2} // type *Vertex
+	p1 := &Vertex{1, 2} // Type *Vertex
 
 	fmt.Println(v1, v2, v3, p1)
+}
+
+func playArrays() {
+	var arr1 [2]string // Length 2 is part of the type
+	arr2 := [6]int{1, 2, 3}
+	fmt.Println(arr1)
+	fmt.Println(arr2)
+
+	var slice1 []int = arr2[1:4] // Slice, dynamically-sized view of arr2
+	var slice2 []int = arr2[1:4]
+	fmt.Println(slice1)
+	fmt.Println(slice2)
+	slice1[0] = 100
+
+	// Modifying slice1 element modifies the underlying array,
+	// and other slices that share the same underlying array
+	// will see those changes (they are just views on arrays)
+	fmt.Println(slice1, slice2, arr2)
 }
 
 func main() {
@@ -146,4 +164,5 @@ func main() {
 
 	playPointers()
 	playStructs()
+	playArrays()
 }
