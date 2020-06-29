@@ -116,6 +116,31 @@ func playArrays() {
 	}
 
 	fmt.Println(q, s)
+
+	// Length is 3, capacity is 3 too, because the slice reference
+	// all the elements, from the first one.
+	a := []int{1, 2, 3}
+	fmt.Printf("len=%d cap=%d %v\n", len(a), cap(a), a) // 3 3 [1 2 3]
+
+	// Lenth is 1, but capacity is 2: 2 elements in the underlying array
+	// (2 and 3), counting from the first element (2).
+	a = a[1:2]
+	fmt.Printf("len=%d cap=%d %v\n", len(a), cap(a), a) // 1 2 [2]
+
+	// Error: capacity of a is now 2, so cannot extend the length to 3.
+	// It would have no sense, because a is [2] from the previous assignment,
+	// and the underlying arr is [1 2 3].
+	// Slicing slice [2] with [:3] would generate a
+	// "slice bounds out of range" error.
+	// a = a[:3]
+
+	// OK: slicing slice [2] with [:2] and with the underlying array [1 2 3]
+	// will extend with the element 3.
+	a = a[:2]
+	fmt.Printf("len=%d cap=%d %v\n", len(a), cap(a), a) // 2 2 [2 3]
+
+	// ==> Capacity is a guarantee that we will not extend beyond
+	// the underlying array elements.
 }
 
 func main() {
