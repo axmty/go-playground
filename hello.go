@@ -92,14 +92,30 @@ func playArrays() {
 
 	var slice1 []int = arr2[1:4] // Slice, dynamically-sized view of arr2
 	var slice2 []int = arr2[1:4]
-	fmt.Println(slice1)
-	fmt.Println(slice2)
+	slice3 := arr2[2:]
+	slice4 := arr2[:]
+	slice5 := arr2[:3]
+	fmt.Println(slice1, slice2, slice3, slice4, slice5)
 	slice1[0] = 100
 
 	// Modifying slice1 element modifies the underlying array,
 	// and other slices that share the same underlying array
 	// will see those changes (they are just views on arrays)
 	fmt.Println(slice1, slice2, arr2)
+
+	// Slice literal, creates the underlying array [3]int
+	// and builds the slice that references it
+	q := []int{2, 3, 4}
+
+	s := []struct {
+		i int
+		b bool
+	}{
+		{2, true},
+		{3, false},
+	}
+
+	fmt.Println(q, s)
 }
 
 func main() {
