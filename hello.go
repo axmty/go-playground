@@ -165,6 +165,17 @@ func makeSlice() {
 	// c := make([]int, 5, 3)
 }
 
+func appendToSlice() {
+	arr := [3]int{1, 2, 3}
+	s := arr[:2]
+	fmt.Printf("arr: %v, s: %v\n", arr, s) // arr: [1 2 3], s: [1 2]
+
+	fmt.Println("appending 4 and 5 to slice s")
+	// Building a new slice with append() does not modify the original slice.
+	v := append(s, 4, 5)
+	fmt.Printf("arr: %v, s: %v, v: %v\n", arr, s, v) // arr: [1 2 3], s: [1 2 4 5]
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -229,4 +240,5 @@ func main() {
 	playStructs()
 	playArrays()
 	makeSlice()
+	appendToSlice()
 }
