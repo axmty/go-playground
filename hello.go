@@ -176,6 +176,23 @@ func appendToSlice() {
 	fmt.Printf("arr: %v, s: %v, v: %v\n", arr, s, v) // arr: [1 2 3], s: [1 2 4 5]
 }
 
+func ranges() {
+	// i, v = index, element copy
+	for i, v := range []int{1, 2, 4, 8, 16} {
+		fmt.Printf("2**%d = %d\n", i, v)
+	}
+
+	// Omitting index
+	for _, v := range []int{1, 2, 4} {
+		fmt.Printf("Value %d\n", v)
+	}
+
+	// Omitting value
+	for i := range []int{1, 2, 3} {
+		fmt.Printf("At index %d\n", i)
+	}
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -241,4 +258,5 @@ func main() {
 	playArrays()
 	makeSlice()
 	appendToSlice()
+	ranges()
 }
