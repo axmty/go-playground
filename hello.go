@@ -131,7 +131,7 @@ func playArrays() {
 	// It would have no sense, because a is [2] from the previous assignment,
 	// and the underlying arr is [1 2 3].
 	// Slicing slice [2] with [:3] would generate a
-	// "slice bounds out of range" error.
+	// "slice bounds out of range" error because extending is impossible.
 	// a = a[:3]
 
 	// OK: slicing slice [2] with [:2] and with the underlying array [1 2 3]
@@ -141,6 +141,28 @@ func playArrays() {
 
 	// ==> Capacity is a guarantee that we will not extend beyond
 	// the underlying array elements.
+	var nilSlice []int = nil
+	fmt.Println(nilSlice, len(nilSlice), cap(nilSlice)) // [] 0 0
+	if nilSlice == nil {
+		fmt.Println("nil slice!")
+	}
+}
+
+func makeSlice() {
+	a := make([]int, 5)            // len(a) = 5, cap(a) = 5
+	fmt.Println(a, len(a), cap(a)) // [0 0 0 0 0] 5 5
+
+	b := make([]int, 0, 5)         // len(b) = 0, cap(b) = 5
+	fmt.Println(b, len(b), cap(b)) // [] 0 5
+	b = b[:cap(b)]                 // len(b) = 5, cap(b) = 5
+	fmt.Println(b, len(b), cap(b)) // [0 0 0 0 0] 5 5
+	b = b[:cap(b)-1]               // len(b) = 4, cap(b) = 5
+	fmt.Println(b, len(b), cap(b)) // [0 0 0 0] 4 5
+	b = b[1:]                      // len(b) = 3, cap(b) = 4
+	fmt.Println(b, len(b), cap(b)) // [0 0 0] 3 4
+
+	// Compile error: length cannot be larger than capacity
+	// c := make([]int, 5, 3)
 }
 
 func main() {
@@ -206,4 +228,5 @@ func main() {
 	playPointers()
 	playStructs()
 	playArrays()
+	makeSlice()
 }
