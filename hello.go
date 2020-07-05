@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"math"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/axmty/go-playground/morestrings"
 	"github.com/google/go-cmp/cmp"
+	"golang.org/x/tour/wc"
 )
 
 // Vertex is a simple vector struct
@@ -224,6 +226,20 @@ func playMaps() {
 	fmt.Println(ok, elem) // true {4 -4}
 }
 
+func wordCount(s string) map[string]int {
+	m := make(map[string]int)
+	words := strings.Fields(s)
+	for _, w := range words {
+		_, ok := m[w]
+		if ok {
+			m[w]++
+		} else {
+			m[w] = 1
+		}
+	}
+	return m
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -291,4 +307,5 @@ func main() {
 	appendToSlice()
 	ranges()
 	playMaps()
+	wc.Test(wordCount)
 }
