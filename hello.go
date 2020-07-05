@@ -14,9 +14,11 @@ import (
 
 // Vertex is a simple vector struct
 type Vertex struct {
-	X int
-	Y int
+	X float64
+	Y float64
 }
+
+type myFloat float64
 
 // Sqrt computes the square root of x with a precision of epsilon
 func Sqrt(x, epsilon float64) float64 {
@@ -284,6 +286,27 @@ func playFuncs() {
 	}
 }
 
+func (v *Vertex) abs() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+func (f *myFloat) abs() float64 {
+	if *f < 0 {
+		return float64(-*f)
+	}
+	return float64(*f)
+}
+
+func (v *Vertex) scale(f float64) {
+	v.X *= f
+	v.Y *= f
+}
+
+func scale(v *Vertex, f float64) {
+	v.X *= f
+	v.Y *= f
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -353,4 +376,9 @@ func main() {
 	playMaps()
 	wc.Test(wordCount)
 	playFuncs()
+
+	v := Vertex{3, 4}
+	scale(&v, 10)
+	v.scale(10)
+	fmt.Println(v.abs())
 }
