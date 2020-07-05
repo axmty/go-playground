@@ -193,6 +193,37 @@ func ranges() {
 	}
 }
 
+func playMaps() {
+	m := make(map[string]Vertex)
+	m["ABC"] = Vertex{
+		4, -4,
+	}
+	fmt.Println(m["AB"])
+	fmt.Println(m["ABC"])
+
+	// Using map litteral.
+	ages := map[string]int{
+		"Alex": 28,
+		"Nico": 31,
+	}
+	fmt.Println(ages) // map[Alex:28 Nico:31]
+
+	// Omitting the type name.
+	m2 := map[string]Vertex{
+		"ABC": {4, -4},
+	}
+	fmt.Println(m2) // map[ABC:{4 -4}]
+
+	delete(m, "ABC")
+	fmt.Println(m) // map[]
+
+	elem, ok := m["ABC"]
+	fmt.Println(ok, elem) // false {0 0}
+
+	elem, ok = m2["ABC"]
+	fmt.Println(ok, elem) // true {4 -4}
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -259,4 +290,5 @@ func main() {
 	makeSlice()
 	appendToSlice()
 	ranges()
+	playMaps()
 }
