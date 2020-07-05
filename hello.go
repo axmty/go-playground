@@ -20,6 +20,10 @@ type Vertex struct {
 
 type myFloat float64
 
+type abser interface {
+	abs() float64
+}
+
 // Sqrt computes the square root of x with a precision of epsilon
 func Sqrt(x, epsilon float64) float64 {
 	z := 1.0
@@ -291,7 +295,9 @@ func (v *Vertex) abs() float64 {
 }
 
 func (f *myFloat) abs() float64 {
-	if *f < 0 {
+	if f == nil {
+		return 0
+	} else if *f < 0 {
 		return float64(-*f)
 	}
 	return float64(*f)
@@ -305,6 +311,33 @@ func (v *Vertex) scale(f float64) {
 func scale(v *Vertex, f float64) {
 	v.X *= f
 	v.Y *= f
+}
+
+func playInterfaces() {
+	var a abser
+	f := myFloat(34)
+	a = &f
+	a = &Vertex{1, 2}
+
+	fmt.Println(a.abs())
+
+	var nilF *myFloat
+	a = nilF
+	fmt.Println(a) // <nil>
+	// Error, nilF pointer is nil, and no nil pointer handling inside
+	// *myFloat.abs method.
+	// This can be fixed with adding nil handling.
+	// fmt.Println(a.abs())
+
+	// nilF pointer is nil and the underlying value of
+	// the a interface value is nil, but there is a concrete type.
+	fmt.Printf("(%v, %T)\n", a, a) // (<nil>, *main.myFloat)
+
+	a = nil
+	fmt.Printf("(%v, %T)\n", a, a) // (<nil>, <nil>)
+	// Error, the a interface value is nil, and there is no underlying type.
+	// How could we know which method to call then?
+	// fmt.Println(a.abs())
 }
 
 func main() {
@@ -381,4 +414,6 @@ func main() {
 	scale(&v, 10)
 	v.scale(10)
 	fmt.Println(v.abs())
+
+	playInterfaces()
 }
