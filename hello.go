@@ -252,6 +252,15 @@ func adder() func(int) int {
 	}
 }
 
+func fibonacci() func() int {
+	now, next := 0, 1
+	return func() int {
+		next = now + next
+		now = next - now
+		return next - now
+	}
+}
+
 func playFuncs() {
 	hypot := func(x, y float64) float64 {
 		return math.Sqrt(x*x + y*y)
@@ -267,6 +276,11 @@ func playFuncs() {
 			pos(i),
 			neg(-2*i),
 		)
+	}
+
+	f := fibonacci()
+	for i := 0; i < 10; i++ {
+		fmt.Println(f())
 	}
 }
 
