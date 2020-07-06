@@ -359,6 +359,38 @@ func playInterfaces() {
 	describe(i) // (hello, string)
 }
 
+func playTypeAssertions() {
+	var i interface{} = "hello"
+
+	s := i.(string)
+	fmt.Println(s) // hello
+
+	s, ok := i.(string)
+	fmt.Println(s, ok) // hello, true
+
+	// panic: interface conversion: interface {} is string, not float64.
+	// f := i.(float64)
+
+	// No panic.
+	f, ok := i.(float64)
+	fmt.Println(f, ok) // 0 false (0 is float64 zero value)
+
+	fn := func(i interface{}) {
+		switch v := i.(type) {
+		case int:
+			fmt.Printf("Twice %v is %v\n", v, v*2)
+		case string:
+			fmt.Printf("%q is %v bytes long\n", v, len(v))
+		default:
+			fmt.Printf("I don't know about type %T\n", v)
+		}
+	}
+
+	fn(34)
+	fn("Hello world!")
+	fn(true)
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -435,4 +467,5 @@ func main() {
 	fmt.Println(v.abs())
 
 	playInterfaces()
+	playTypeAssertions()
 }
