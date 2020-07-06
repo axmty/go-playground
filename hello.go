@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"os"
 	"runtime"
 	"strings"
 	"time"
@@ -482,6 +483,30 @@ func playReaders() {
 	reader.Validate(myReader{})
 }
 
+type rot13Reader struct {
+	r io.Reader
+}
+
+func (rr rot13Reader) Read(b []byte) (int, error) {
+	n, err := rr.r.Read(b)
+	for i := 0; i < len(b); i++ {
+		c := b[i]
+		if c >= 'A' && c <= 'Z' {
+			b[i] = 'A' + (c-'A'+13)%26
+		} else if c >= 'a' && c <= 'z' {
+			b[i] = 'a' + (c-'a'+13)%26
+		}
+	}
+	return n, err
+}
+
+func playRot13Reader() {
+	s := strings.NewReader("Lbh penpxrq gur pbqr!")
+	r := rot13Reader{s}
+	io.Copy(os.Stdout, &r)
+	fmt.Println()
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -569,4 +594,5 @@ func main() {
 	}
 
 	playReaders()
+	playRot13Reader()
 }
