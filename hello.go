@@ -50,6 +50,22 @@ func Sqrt(x, epsilon float64) float64 {
 	return z
 }
 
+type errNegativeSqrt float64
+
+func (e errNegativeSqrt) Error() string {
+	// If we just use e instead of float64(e), infinite loop.
+	// Because it will print using the Error() method on errNegativeSqrt,
+	// since e implements the interface error.
+	return fmt.Sprintf("cannot Sqrt negative number: %v", float64(e))
+}
+
+func sqrtError(x float64) (float64, error) {
+	if x < 0 {
+		return 0, errNegativeSqrt(x)
+	}
+	return math.Sqrt(x), nil
+}
+
 func powIf(x, n, lim float64) float64 {
 	v := math.Pow(x, n)
 	if v < lim {
@@ -416,6 +432,28 @@ func playStringer() {
 	fmt.Println(&addr)
 }
 
+type myError struct {
+	When time.Time
+	What string
+}
+
+func (e *myError) Error() string {
+	return fmt.Sprintf("at %v, %s", e.When, e.What)
+}
+
+func runError() error {
+	return &myError{
+		time.Now(),
+		"it didn't work",
+	}
+}
+
+func playErrors() {
+	if err := runError(); err != nil {
+		fmt.Println(err)
+	}
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -494,4 +532,11 @@ func main() {
 	playInterfaces()
 	playTypeAssertions()
 	playStringer()
+	playErrors()
+
+	sqrtError(2)
+	_, err := sqrtError(-2)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
 }
