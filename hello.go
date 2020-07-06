@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"runtime"
 	"strings"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/axmty/go-playground/morestrings"
 	"github.com/google/go-cmp/cmp"
+	"golang.org/x/tour/reader"
 	"golang.org/x/tour/wc"
 )
 
@@ -454,6 +456,32 @@ func playErrors() {
 	}
 }
 
+type myReader struct{}
+
+func (r myReader) Read(b []byte) (int, error) {
+	for i := 0; i < len(b); i++ {
+		b[i] = 'A'
+	}
+	return len(b), nil
+}
+
+func playReaders() {
+	r := strings.NewReader("漢字!")
+	b := make([]byte, 3)
+	for {
+		n, err := r.Read(b)
+		fmt.Printf("n = %v err = %v b = %v\n", n, err, b)
+		fmt.Printf("b[:n] = %q\n", b[:n])
+		if err == io.EOF {
+			break
+		}
+	}
+
+	fmt.Printf("%q\n", [3]byte{230, 188, 162}) // 漢 (3 bytes for this char)
+
+	reader.Validate(myReader{})
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -539,4 +567,6 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 	}
+
+	playReaders()
 }
