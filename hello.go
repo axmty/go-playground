@@ -18,10 +18,26 @@ type Vertex struct {
 	Y float64
 }
 
+type person struct {
+	Name string
+	Age  int
+}
+
 type myFloat float64
 
 type abser interface {
 	abs() float64
+}
+
+type ipAddr [4]byte
+
+func (addr *ipAddr) String() string {
+	return fmt.Sprintf(
+		"%v.%v.%v.%v", addr[0], addr[1], addr[2], addr[3])
+}
+
+func (p person) String() string {
+	return fmt.Sprintf("%v (%v years)", p.Name, p.Age)
 }
 
 // Sqrt computes the square root of x with a precision of epsilon
@@ -391,6 +407,15 @@ func playTypeAssertions() {
 	fn(true)
 }
 
+func playStringer() {
+	a := person{"Arthur Dent", 42}
+	z := person{"Zaphod Beeblebrox", 9001}
+	fmt.Println(a, z)
+
+	addr := ipAddr{127, 0, 0, 1}
+	fmt.Println(&addr)
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -468,4 +493,5 @@ func main() {
 
 	playInterfaces()
 	playTypeAssertions()
+	playStringer()
 }
