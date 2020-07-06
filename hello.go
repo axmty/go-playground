@@ -313,6 +313,10 @@ func scale(v *Vertex, f float64) {
 	v.Y *= f
 }
 
+func describe(i interface{}) {
+	fmt.Printf("(%v, %T)\n", i, i)
+}
+
 func playInterfaces() {
 	var a abser
 	f := myFloat(34)
@@ -324,8 +328,10 @@ func playInterfaces() {
 	var nilF *myFloat
 	a = nilF
 	fmt.Println(a) // <nil>
+
 	// Error, nilF pointer is nil, and no nil pointer handling inside
-	// *myFloat.abs method.
+	// *myFloat.abs method (we still know the concrete type thanks to
+	// the statement 'var nilF *myFloat', see next).
 	// This can be fixed with adding nil handling.
 	// fmt.Println(a.abs())
 
@@ -338,6 +344,19 @@ func playInterfaces() {
 	// Error, the a interface value is nil, and there is no underlying type.
 	// How could we know which method to call then?
 	// fmt.Println(a.abs())
+
+	var i interface{}
+	describe(i) // (<nil>, <nil>)
+
+	var x *Vertex
+	i = x
+	describe(i) // (<nil>, *main.Vertex)
+
+	i = 42
+	describe(i) // (42, int)
+
+	i = "hello"
+	describe(i) // (hello, string)
 }
 
 func main() {
