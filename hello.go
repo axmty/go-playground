@@ -764,4 +764,6 @@ func main() {
 	playRot13Reader()
 	playGoroutines()
 	equivBinTrees()
+
+	fetch()
 }
