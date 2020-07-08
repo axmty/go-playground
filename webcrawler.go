@@ -15,13 +15,46 @@ type crawled struct {
 	mux  sync.Mutex
 }
 
-// Crawl uses fetcher to recursively crawl pages starting with url,
-// to a maximum of depth.
+// Waiter represents an object that can wait for goroutines to finish.
+type Waiter struct {
+	mux sync.Mutex
+	n   int
+	c   chan int
+}
+
+// NewWaiter creates a new Waiter object.
+func NewWaiter() *Waiter {
+	return &Waiter{n: 0, c: make(chan int)}
+}
+
+// Add adds n to the number of goroutines to wait for.
+func (w *Waiter) Add(n int) {
+	w.mux.Lock()
+	defer w.mux.Unlock()
+	w.n += n
+}
+
+// Wait waits for all goroutines to finish.
+func (w *Waiter) Wait() {
+	for range w.c {
+		w.n--
+		if w.n <= 0 {
+			close(w.c)
+		}
+	}
+}
+
+// Done signals that a goroutine has finished.
+func (w *Waiter) Done() {
+	w.c <- 1
+}
+
+// Crawl uses fetcher to recursively crawl pages starting with url, to a maximum of depth.
 func Crawl(url string, depth int, fetcher Fetcher) {
 	fetchedUrls := crawled{urls: make(map[string]bool)}
 	var crawler func(string, int, Fetcher)
 	crawler = func(url string, depth int, fetcher Fetcher) {
-		var wg sync.WaitGroup
+		var w *Waiter = NewWaiter()
 
 		fetchedUrls.mux.Lock()
 		_, already := fetchedUrls.urls[url]
@@ -41,13 +74,13 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 		}
 		fmt.Printf("found: %s %q\n", url, body)
 		for _, u := range urls {
-			wg.Add(1)
+			w.Add(1)
 			go func(u string) {
-				defer wg.Done()
+				defer w.Done()
 				crawler(u, depth-1, fetcher)
 			}(u)
 		}
-		wg.Wait()
+		w.Wait()
 	}
 	crawler(url, depth, fetcher)
 }
