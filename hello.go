@@ -12,6 +12,7 @@ import (
 	"github.com/axmty/go-playground/morestrings"
 	"github.com/google/go-cmp/cmp"
 	"golang.org/x/tour/reader"
+	"golang.org/x/tour/tree"
 	"golang.org/x/tour/wc"
 )
 
@@ -598,6 +599,32 @@ func playGoroutines() {
 	fmt.Println("end method playGoroutines")
 }
 
+// Walk walks the tree t sending all values from
+// the tree to the channel ch.
+func Walk(t *tree.Tree, ch chan int) {
+	if t.Left != nil {
+		Walk(t.Left, ch)
+	}
+	ch <- t.Value
+	if t.Right != nil {
+		Walk(t.Right, ch)
+	}
+}
+
+func equivBinTrees() {
+	t := tree.New(10)
+	ch := make(chan int)
+	go Walk(t, ch)
+	for i := 0; i < 10; i++ {
+		n := <-ch
+		if i != 0 {
+			fmt.Print(", ")
+		}
+		fmt.Printf("%d", n)
+	}
+	fmt.Println()
+}
+
 func main() {
 	fmt.Println(morestrings.ReverseRunes("Hello world!"))
 	fmt.Println(cmp.Diff("Hello world", "Hello go"))
@@ -687,4 +714,5 @@ func main() {
 	playReaders()
 	playRot13Reader()
 	playGoroutines()
+	equivBinTrees()
 }
